@@ -1,0 +1,103 @@
+/* Add these lines explicitly at the top */
+html, body {
+  margin: 0;
+  padding: 0;
+}
+
+.layout {
+  display: flex;
+  min-height: 100vh;
+  margin: 0;   /* ensure no margin */
+  padding: 0;  /* ensure no padding */
+}
+
+.sidebar {
+  width: 220px;
+  background: #1E4D2B;
+  padding: 10px;
+  border-right: 1px solid hsl(61, 77%, 37%);
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar h2 {
+  font-size: 1.5em;
+  color: #C8C372;
+  margin-bottom: 20px;
+}
+
+.selected-project-badge {
+  background: #2a6b39;
+  border: 2px solid #C8C372;
+  border-radius: 6px;
+  padding: 10px;
+  margin-bottom: 15px;
+  font-size: 0.85em;
+}
+
+.selected-project-badge strong {
+  color: #C8C372;
+  display: block;
+  margin-bottom: 5px;
+  font-size: 0.9em;
+}
+
+.selected-project-badge .project-name {
+  color: #ffffff;
+  font-weight: bold;
+  font-size: 1.1em;
+}
+
+.sidebar h3 {
+  font-size: 1em;
+  margin-top: 20px;
+  margin-bottom: 10px;
+  color: #C8C372;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.sidebar ul {
+  list-style: none;
+  padding: 0;
+  color: #fcf9f9;
+  margin-bottom: 20px;
+}
+
+.sidebar ul li {
+  margin-bottom: 8px;
+}
+
+.sidebar ul li a {
+  text-decoration: none;
+  color: #fffdfd;
+}
+
+.sidebar ul li a:hover {
+  color: #C8C372;
+}
+
+.connection-manager-btn {
+  margin-top: auto;
+  padding: 10px;
+  background: #C8C372;
+  color: #1E4D2B;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 0.9em;
+  transition: background 0.3s;
+}
+
+.connection-manager-btn:hover {
+  background: #d4cf85;
+}
+
+.main-content {
+  padding: 0px;
+  flex-grow: 1;
+  overflow-y: auto;
+  max-width: 100%;
+  margin: 0 auto;
+}

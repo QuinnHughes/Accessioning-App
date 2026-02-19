@@ -1,0 +1,10 @@
+{
+  "type": "postgresql",
+  "config": {
+    "host": "10.2.30.91",
+    "port": "5432",
+    "database": "accessioning_app",
+    "username": "quinnjh",
+    "password": "quinn"
+  }
+}

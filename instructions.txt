@@ -1,0 +1,129 @@
+Neccessary pages:
+
+Projects page-
+-The projects page will be our initial page we load into and it will serve the purpose of making sure we can get the full extent of the program without overlapping projects as we have a few accessioning projects from different libraries.
+Here we want the option to select which project we will be working on that session using a large visible dropdown, we will also want to make sure throughout the app that it is visible which project was selected so that we dont make mistakes.
+But how I imagine this page working is that we have our project selection along with two buttons one to create a project and one to edit a projects variables.
+
+-For the project creation/editing we will want a menu where we can set categories along with their empty shelf requirements as an example for a vet project we will need 180 shelves for bound journals and 164 shelves for books. So for this example we would add a category
+called bound journals that needs 180 shelves and since we can fit about 25 bound journals a shelf we would also want the option to set that as the default amount for the items that can go on a shelf which we would do a similar action for books but we can fit about 35 books per shelf 
+so that would be different than bound journals this will also allow us to keep track of where we are at later on under the empty shelves recording page along with having a base for number for Batch printing stickers later. 
+
+- Also since we don't want to accession two books to the same spot we will want the projects to save all their information seperately so a shelf entered as empty for one project doesn't also show up empty under another project.
+
+Empty shelves recording page-
+-Here we will need to be able to manually enter empty shelves so that they will show up in a list that we can first of all see them and secondly we will need the option to export to excel a list of all empty shelves,
+we will also want the option to be able to check of shelves as accessioned so that they end up on a second list of already accessioned shelves this will help us from accidently accesioning to the same shelf twice and 
+will be easier than trying to automate it. 
+
+-This page will also help us keep track of where we are at with our projects, how this will work is that for looking at our previous example when we enter a empty shelve we will assign it as a bound journal shelf or book shelf and I would like a visual to see how many more shelves 
+we need to achieve our project goal for that material category. Also going back to our projectes page this will allow us to know how many stickers should be on the batch print for that shelf as if its a bound journal and its average amount on shelf is 25 when we select that shelf for a batch 
+print it should understand we want to preprint 25 items for that empty shelf when we select it. 
+
+Accessioning page- 
+-The accesioning page will be for actually accesioning it will have a few features first of we will need the option to select what shelf we are working with, with this then we can select how many items to pregenerate for
+the other proccesses of the page. First we will want to choose how many items we want pregenerated than with this information we can make an excel sheet with the first column titles "barcode" which will be empty and a second 
+column that will be titled "alternative_call_number" which will be prepopulated with our storage call numbers for that shelf and the amount of items. This way we can download it and just scan in the barcodes next to the corresponding 
+shelf position, and than we will use that to update our ils system. 
+
+-We will also want as a backup here the option to pregenerate a copy and pastable list for printing stickers to match the alternative_call_numbers for the excel sheet we made. 
+for the software we use to print stickers the batch print requires a specific format which to get you the idea at the very bottom of this I will attach the script I currently use 
+to print stickers. 
+
+-other things of note for the accesioning page are that I would like to keep it user option oriented where instead of cluttering the screen give users option to view previews but not make them automatically take up the screen with 
+the excel sheet or the sticker printing. I would also like the option to print a set number of additional stickers for example if I estimate a shelf has 25 items so I select that at first and it turns out there is 28 it would be nice 
+to be able to enter into a box that I want 3 additional stickers starting at the end of the current last alternative_call_number for that shelf and it will give me the copy and pastable batch print for just those three, and with this we wont
+update the excel sheet as dragging and dropping the last number in excel handles it just fine. 
+
+
+Batch printing page- 
+-This page is going to be for getting together large amounts of stickers for our known empty shelves. For this we will want the option to add a shelf to the batch and using our project categories and assigned empty shelves we can say select ten shelves 
+and from this it will give us the copy pastable formated list to print those stickers. So for example if I selected ten shelves, 5 assigned bound journal and 5 assigned books we would want five shelfs worth of stickers that go up to 25 items and 5 shelves with stickers going up to 35 items 
+as that was our predefined project amount. But in case of maybe so oddball materials that arent standard size for instance if just 3 shelves of bound journals are going to need 30 items I would like the option to manually edit those shelves predefined amount here before generating the batch print. 
+
+upload/export page-
+-This page will be where we will upload the excel sheets we generated under accessioning once they have had the barcodes scanned in so that we can make sure that if someone forgets to upload one to our ILS systems we have a backup. Once sheets have been uploaded to it  I would like the option to export what we have uploaded into a new excel sheet, 
+but when doing this we should be able to search within alternative call number range for instance if I wanted to see all alternative_call_numbers that we uploaded between say S-1-01B-01-01 and S-1-15B-08-07 I would enter those and be able to export a list for everything between under that project 
+
+
+Batch printing script:
+def get_input(prompt, default=None):
+    """Get user input with optional default value."""
+    if default is not None:
+        user_input = input(f"{prompt} [default: {default}]: ").strip()
+        return user_input if user_input else default
+    return input(f"{prompt}: ").strip()
+
+def get_int_input(prompt, default=None):
+    """Get integer input with validation."""
+    while True:
+        try:
+            value = get_input(prompt, default)
+            return int(value)
+        except ValueError:
+            print("Please enter a valid number.")
+
+def generate_labels():
+    """Generate inventory labels based on user input."""
+    print("\n=== INVENTORY LABEL GENERATOR ===\n")
+    
+    # Get prefix
+    prefix = get_input("Enter prefix (e.g., S-1-01B)", "S-1-01B")
+    
+    # Get ladder range
+    start_ladder = get_int_input("Start ladder", 1)
+    end_ladder = get_int_input("End ladder", start_ladder)
+    
+    # Get shelf range
+    start_shelf = get_int_input("Start shelf", 1)
+    end_shelf = get_int_input("End shelf", start_shelf)
+    
+    # Ask for specific items or full range
+    print("\nItem selection:")
+    print("  1. Specific items (e.g., 3, 15, 19)")
+    print("  2. Full range (e.g., 1-100)")
+    choice = get_input("Choose option (1 or 2)", "1")
+    
+    specific_items_list = []
+    items_per_shelf = 100
+    
+    if choice == "1":
+        specific_items = get_input("Enter item numbers (comma-separated, e.g., 3, 15, 19)", "")
+        if specific_items:
+            specific_items_list = [int(item.strip()) for item in specific_items.split(",")]
+    else:
+        items_per_shelf = get_int_input("Items per shelf", 100)
+    
+    # Generate call numbers
+    call_numbers = []
+    for ladder in range(start_ladder, end_ladder + 1):
+        for shelf in range(start_shelf, end_shelf + 1):
+            if specific_items_list:
+                for item in specific_items_list:
+                    call_number = f"{prefix}-{ladder:02}-{shelf:02}-{item:03}"
+                    call_numbers.append(call_number)
+            else:
+                for item in range(1, items_per_shelf + 1):
+                    call_number = f"{prefix}-{ladder:02}-{shelf:02}-{item:03}"
+                    call_numbers.append(call_number)
+    
+    # Format output
+    output = ""
+    for call_number in call_numbers:
+        output += f"{call_number}\n\n\n===============\n"
+    
+    # Display results
+    print(f"\n✓ Generated {len(call_numbers)} labels")
+    print("\n" + output)
+    
+    return output
+
+# Main loop
+while True:
+    generate_labels()
+    
+    # Ask if user wants to generate more
+    again = get_input("\nGenerate more labels? (y/n)", "y").lower()
+    if again != 'y':
+        print("\nGoodbye!")
+        break
